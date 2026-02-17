@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% block title %}Student Portal{% endblock %}
+{% block content %}
+{% include 'partials/student_nav.html' %}
+<section class="grid-cards">
+  <article class="metric-card">
+    <p>Student</p>
+    <h3>{{ student.user.get_full_name|default:student.user.username }}</h3>
+  </article>
+  <article class="metric-card">
+    <p>Admission No</p>
+    <h3>{{ student.admission_no }}</h3>
+  </article>
+  <article class="metric-card">
+    <p>Class</p>
+    <h3>{{ student.class_name }} {{ student.section }}</h3>
+  </article>
+  <article class="metric-card">
+    <p>Today Attendance</p>
+    <h3>{% if today_attendance %}Present{% else %}Not Marked{% endif %}</h3>
+  </article>
+</section>
+
+<section class="two-col">
+  <div class="panel qr-panel">
+    <h2>My QR Attendance Code</h2>
+    <p>Show this QR code at the school gate. Admin scanner will mark attendance instantly.</p>
+    <div class="qr-box">
+      <img
+        id="student-qr-image"
+        src="{{ qr_image_src }}"
+        alt="Student Attendance QR"
+        width="220"
+        height="220"
+        onerror="this.style.display='none'; document.getElementById('qr-fallback').style.display='block';"
+      />
+      <p id="qr-fallback" class="tiny-note" style="display:none;">
+        QR image could not be loaded. Use manual attendance from admin panel.
+      </p>
+    </div>
+    <code id="qr-text" class="tiny-note">{{ qr_payload }}</code>
+  </div>
+
+  <div class="panel">
+    <h2>Attendance History</h2>
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Method</th><th>Time</th></tr>
+      </thead>
+      <tbody>
+        {% for item in attendance_records %}
+        <tr>
+          <td>{{ item.date }}</td>
+          <td>{{ item.get_method_display }}</td>
+          <td>{{ item.marked_at|date:'H:i' }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">No attendance records yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="two-col">
+  <div class="panel">
+    <h2>Notices</h2>
+    <table>
+      <thead><tr><th>Title</th><th>Date</th></tr></thead>
+      <tbody>
+        {% for notice in notices %}
+        <tr><td>{{ notice.title }}</td><td>{{ notice.created_at|date:'Y-m-d' }}</td></tr>
+        {% empty %}
+        <tr><td colspan="2">No notices.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="panel">
+    <h2>Homework</h2>
+    <table>
+      <thead><tr><th>Title</th><th>Subject</th><th>Due</th></tr></thead>
+      <tbody>
+        {% for hw in homework_items %}
+        <tr><td>{{ hw.title }}</td><td>{{ hw.subject }}</td><td>{{ hw.due_date }}</td></tr>
+        {% empty %}
+        <tr><td colspan="3">No homework.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Fee Status</h2>
+  <table>
+    <thead><tr><th>Term</th><th>Total</th><th>Paid</th><th>Due</th><th>Due Date</th></tr></thead>
+    <tbody>
+      {% for fee in fees %}
+      <tr>
+        <td>{{ fee.term }}</td>
+        <td>{{ fee.total_amount }}</td>
+        <td>{{ fee.paid_amount }}</td>
+        <td>{{ fee.due_amount }}</td>
+        <td>{{ fee.due_date }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5">No fee record.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

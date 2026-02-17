@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}Manage Parents{% endblock %}
+{% block content %}
+{% include 'partials/admin_nav.html' with active_page='parents' %}
+<section class="two-col">
+  <div class="panel">
+    <h2>Add Parent</h2>
+    <form method="post" class="stack-form">
+      {% csrf_token %}
+      <div class="form-grid">
+        <div><label>First Name</label>{{ form.first_name }}</div>
+        <div><label>Last Name</label>{{ form.last_name }}</div>
+        <div><label>Username</label>{{ form.username }}</div>
+        <div><label>Password</label>{{ form.password }}</div>
+        <div><label>Occupation</label>{{ form.occupation }}</div>
+        <div><label>Emergency Contact</label>{{ form.emergency_contact }}</div>
+      </div>
+      {% if form.errors %}
+      <div class="form-errors">{{ form.errors }}</div>
+      {% endif %}
+      <button class="btn btn-primary" type="submit">Create Parent</button>
+    </form>
+  </div>
+
+  <div class="panel">
+    <h2>Parent Accounts</h2>
+    <table>
+      <thead>
+        <tr><th>Name</th><th>Username</th><th>Children</th></tr>
+      </thead>
+      <tbody>
+        {% for parent in parents %}
+        <tr>
+          <td>{{ parent.user.get_full_name|default:parent.user.username }}</td>
+          <td>{{ parent.user.username }}</td>
+          <td>{{ parent.children_count }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">No parent accounts yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

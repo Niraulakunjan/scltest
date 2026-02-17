@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Academics{% endblock %}
+{% block content %}
+{% include 'partials/admin_nav.html' with active_page='academics' %}
+<section class="two-col">
+  <div class="panel">
+    <h2>Publish Notice</h2>
+    <form method="post" class="stack-form">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="notice" />
+      <div><label>Title</label>{{ notice_form.title }}</div>
+      <div><label>Message</label>{{ notice_form.message }}</div>
+      <div><label>Audience</label>{{ notice_form.audience }}</div>
+      {% if notice_form.errors %}
+      <div class="form-errors">{{ notice_form.errors }}</div>
+      {% endif %}
+      <button class="btn btn-primary" type="submit">Post Notice</button>
+    </form>
+  </div>
+
+  <div class="panel">
+    <h2>Assign Homework</h2>
+    <form method="post" class="stack-form">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="homework" />
+      <div class="form-grid">
+        <div><label>Class</label>{{ homework_form.class_name }}</div>
+        <div><label>Subject</label>{{ homework_form.subject }}</div>
+        <div><label>Title</label>{{ homework_form.title }}</div>
+        <div><label>Due Date</label>{{ homework_form.due_date }}</div>
+        <div class="full-row"><label>Description</label>{{ homework_form.description }}</div>
+      </div>
+      {% if homework_form.errors %}
+      <div class="form-errors">{{ homework_form.errors }}</div>
+      {% endif %}
+      <button class="btn btn-primary" type="submit">Save Homework</button>
+    </form>
+  </div>
+</section>
+
+<section class="two-col">
+  <div class="panel">
+    <h2>Recent Notices</h2>
+    <table>
+      <thead>
+        <tr><th>Title</th><th>Audience</th><th>Date</th></tr>
+      </thead>
+      <tbody>
+        {% for notice in notices %}
+        <tr>
+          <td>{{ notice.title }}</td>
+          <td>{{ notice.get_audience_display }}</td>
+          <td>{{ notice.created_at|date:'Y-m-d' }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">No notices yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2>Recent Homework</h2>
+    <table>
+      <thead>
+        <tr><th>Class</th><th>Title</th><th>Due</th></tr>
+      </thead>
+      <tbody>
+        {% for item in homework_items %}
+        <tr>
+          <td>{{ item.class_name }}</td>
+          <td>{{ item.title }} ({{ item.subject }})</td>
+          <td>{{ item.due_date }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">No homework yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

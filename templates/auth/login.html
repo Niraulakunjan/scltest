@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Login | School Management{% endblock %}
+{% block content %}
+<section class="login-shell">
+  <div class="panel panel-highlight">
+    <h1>School Management System</h1>
+    <p>Role-based portals for admin, students, and parents with QR attendance.</p>
+    <ul class="quick-list">
+      <li>Admin: manage students, parents, academics, fees</li>
+      <li>Student: personal QR code, homework, notices, fees</li>
+      <li>Parent: child attendance and fee tracking</li>
+    </ul>
+  </div>
+
+  <div class="panel login-card">
+    <h2>Sign In</h2>
+    <form method="post" class="stack-form">
+      {% csrf_token %}
+      <div>
+        <label>Username</label>
+        {{ form.username }}
+      </div>
+      <div>
+        <label>Password</label>
+        {{ form.password }}
+      </div>
+      {% if form.non_field_errors %}
+      <div class="form-errors">{{ form.non_field_errors }}</div>
+      {% endif %}
+      <button class="btn btn-primary" type="submit">Login</button>
+    </form>
+    <p class="tiny-note">Use credentials provided by your school administrator.</p>
+  </div>
+</section>
+{% endblock %}

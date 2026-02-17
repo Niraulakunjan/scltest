@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+{% include 'partials/admin_nav.html' with active_page='admin_dashboard' %}
+<section class="grid-cards">
+  <article class="metric-card">
+    <p>Total Students</p>
+    <h3>{{ total_students }}</h3>
+  </article>
+  <article class="metric-card">
+    <p>Present Today ({{ today }})</p>
+    <h3>{{ present_today }}</h3>
+  </article>
+  <article class="metric-card">
+    <p>Absent Today</p>
+    <h3>{{ absent_today }}</h3>
+  </article>
+  <article class="metric-card">
+    <p>Total Fee Due</p>
+    <h3>{{ due_fee }}</h3>
+  </article>
+</section>
+
+<section class="two-col">
+  <div class="panel">
+    <h2>Class Strength</h2>
+    <table>
+      <thead>
+        <tr><th>Class</th><th>Students</th></tr>
+      </thead>
+      <tbody>
+        {% for row in students_by_class %}
+        <tr><td>{{ row.class_name }}</td><td>{{ row.total }}</td></tr>
+        {% empty %}
+        <tr><td colspan="2">No students yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2>Recent Attendance</h2>
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Student</th><th>Method</th></tr>
+      </thead>
+      <tbody>
+        {% for item in recent_attendance %}
+        <tr>
+          <td>{{ item.date }}</td>
+          <td>{{ item.student.admission_no }} - {{ item.student.user.get_full_name|default:item.student.user.username }}</td>
+          <td>{{ item.get_method_display }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">No attendance yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Latest Notices</h2>
+  <table>
+    <thead>
+      <tr><th>Title</th><th>Audience</th><th>Published</th></tr>
+    </thead>
+    <tbody>
+      {% for notice in notices %}
+      <tr>
+        <td>{{ notice.title }}</td>
+        <td>{{ notice.get_audience_display }}</td>
+        <td>{{ notice.created_at|date:'Y-m-d H:i' }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="3">No notices yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}School Management System{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=DM+Sans:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{% static 'css/app.css' %}" />
+    {% block head_extras %}{% endblock %}
+  </head>
+  <body>
+    <div class="ambient ambient-a"></div>
+    <div class="ambient ambient-b"></div>
+    <div class="dot-grid"></div>
+
+    <header class="top-bar">
+      <a class="brand" href="{% if user.is_authenticated %}{% url 'role_redirect' %}{% else %}{% url 'login' %}{% endif %}">
+        <span class="brand-pill">SMS</span>
+        <span>School Management</span>
+      </a>
+      {% if user.is_authenticated %}
+      <div class="top-actions">
+        <span class="user-chip">{{ user.get_full_name|default:user.username }} · {{ user.role }}</span>
+        <a class="btn btn-ghost" href="{% url 'logout' %}">Logout</a>
+      </div>
+      {% endif %}
+    </header>
+
+    <main class="page-wrap">
+      {% if messages %}
+      <div class="alerts">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'info' }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

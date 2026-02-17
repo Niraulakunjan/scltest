@@ -1,0 +1,8 @@
+<nav class="portal-nav">
+  <a class="{% if active_page == 'admin_dashboard' %}active{% endif %}" href="{% url 'admin_dashboard' %}">Overview</a>
+  <a class="{% if active_page == 'students' %}active{% endif %}" href="{% url 'manage_students' %}">Students</a>
+  <a class="{% if active_page == 'parents' %}active{% endif %}" href="{% url 'manage_parents' %}">Parents</a>
+  <a class="{% if active_page == 'academics' %}active{% endif %}" href="{% url 'manage_academics' %}">Academics</a>
+  <a class="{% if active_page == 'fees' %}active{% endif %}" href="{% url 'manage_fees' %}">Fees</a>
+  <a class="{% if active_page == 'attendance' %}active{% endif %}" href="{% url 'attendance_scanner' %}">QR Attendance</a>
+</nav>

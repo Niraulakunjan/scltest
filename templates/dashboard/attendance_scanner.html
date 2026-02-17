@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}QR Attendance{% endblock %}
+{% block head_extras %}
+<script defer src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+{% endblock %}
+{% block content %}
+{% include 'partials/admin_nav.html' with active_page='attendance' %}
+<section class="two-col attendance-layout">
+  <div class="panel">
+    <h2>QR Attendance Scanner</h2>
+    <p>Use school admin device camera to scan each student QR code.</p>
+    <div class="scanner-toolbar">
+      <button class="btn btn-primary" id="start-scan-btn" type="button">Start Camera</button>
+      <button class="btn btn-ghost" id="stop-scan-btn" type="button">Stop</button>
+    </div>
+    <div id="reader" class="reader-box"></div>
+    <p id="scan-status" class="scan-status">Scanner is idle.</p>
+  </div>
+
+  <div class="panel">
+    <h2>Manual Attendance (Fallback)</h2>
+    <form method="post" action="{% url 'manual_attendance_mark' %}" class="stack-form">
+      {% csrf_token %}
+      <label>Select Student</label>
+      <select name="student_id" required>
+        {% for student in students %}
+        <option value="{{ student.id }}">{{ student.admission_no }} - {{ student.user.get_full_name|default:student.user.username }}</option>
+        {% endfor %}
+      </select>
+      <button class="btn btn-primary" type="submit">Mark Manually</button>
+    </form>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Attendance Today ({{ today }})</h2>
+  <table>
+    <thead>
+      <tr><th>Student</th><th>Time</th><th>Method</th></tr>
+    </thead>
+    <tbody>
+      {% for item in attendance_today %}
+      <tr>
+        <td>{{ item.student.admission_no }} - {{ item.student.user.get_full_name|default:item.student.user.username }}</td>
+        <td>{{ item.marked_at|date:'H:i:s' }}</td>
+        <td>{{ item.get_method_display }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="3">No attendance marked yet today.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  window.scanEndpoint = "{% url 'scan_qr_attendance' %}";
+</script>
+<script src="{% static 'js/admin_scanner.js' %}"></script>
+{% endblock %}
