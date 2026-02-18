@@ -8,8 +8,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = True
 SECRET_KEY = "dev-only-secret-key-change-me"
-ALLOWED_HOSTS = ["www.scl.sajilocode.com", "scl.sajilocode.com"]
-CSRF_TRUSTED_ORIGINS = ["https://scl.sajilocode.com", "https://www.scl.sajilocode.com"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+CSRF_TRUSTED_ORIGINS = []
 
 INSTALLED_APPS = [
     "django.contrib.admin",
